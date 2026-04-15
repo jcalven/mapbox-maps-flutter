@@ -49,7 +49,7 @@ class MapWidget extends StatefulWidget {
     // As a workaround default is true.
     this.textureView = true,
     this.androidHostingMode = AndroidPlatformViewHostingMode.VD,
-    this.styleUri = MapboxStyles.STANDARD,
+    this.styleUri,
     this.gestureRecognizers,
     this.onMapCreated,
     this.onStyleLoadedListener,
@@ -90,8 +90,10 @@ class MapWidget extends StatefulWidget {
   @experimental
   final AndroidPlatformViewHostingMode androidHostingMode;
 
-  /// The styleUri will applied for the MapWidget in the onStart lifecycle event if no style is set. Default is [Style.MAPBOX_STREETS].
-  final String styleUri;
+  /// The styleUri will applied for the MapWidget in the onStart lifecycle event if no style is set.
+  /// When null, no style is loaded and the map renders a solid background until a style is set via
+  /// [MapboxMap.loadStyleURI] or [MapboxMap.loadStyleJson]. Defaults to null.
+  final String? styleUri;
 
   /// Invoked when a new Map is created and return a MapboxMap instance to handle the Map.
   final MapCreatedCallback? onMapCreated;

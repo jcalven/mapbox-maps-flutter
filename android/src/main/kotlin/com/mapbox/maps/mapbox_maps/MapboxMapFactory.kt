@@ -5,7 +5,6 @@ import android.content.Context
 import com.mapbox.common.FeatureTelemetryCounter
 import com.mapbox.maps.MapInitOptions
 import com.mapbox.maps.MapOptions
-import com.mapbox.maps.Style
 import com.mapbox.maps.applyDefaultParams
 import com.mapbox.maps.mapbox_maps.pigeons._MapInterface
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -29,7 +28,7 @@ class MapboxMapFactory(
     val cameraOptions = params["cameraOptions"] as com.mapbox.maps.mapbox_maps.pigeons.CameraOptions?
     val channelSuffix = params["channelSuffix"] as Long
     val textureView = params["textureView"] as? Boolean ?: false
-    val styleUri = params["styleUri"] as? String ?: Style.STANDARD
+    val styleUri = params["styleUri"] as? String
     val pluginVersion = params["mapboxPluginVersion"] as String
     val eventTypes = params["eventTypes"] as List<Long>
 

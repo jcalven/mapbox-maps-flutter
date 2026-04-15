@@ -38,14 +38,14 @@ final class MapboxMapFactory: NSObject, FlutterPlatformViewFactory {
             )
         }
 
-        let styleURI = (args["styleUri"] as? String).map(StyleURI.init(rawValue:))
+        let styleURI = (args["styleUri"] as? String).flatMap(StyleURI.init(rawValue:))
         let mapOptions = args["mapOptions"] as? MapOptions
         let cameraOptions = args["cameraOptions"] as? CameraOptions
 
         let mapInitOptions = MapInitOptions(
             mapOptions: mapOptions?.toMapOptions() ?? MapboxMaps.MapOptions(),
             cameraOptions: cameraOptions?.toCameraOptions(),
-            styleURI: styleURI ?? .standard
+            styleURI: styleURI
         )
 
         Self.mapCounter.increment()
