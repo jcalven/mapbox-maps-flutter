@@ -100,7 +100,8 @@ class MapboxMapController(
   pluginVersion: String,
   eventTypes: List<Long>,
   initialScaleBarEnabled: Boolean? = null,
-  initialCompassEnabled: Boolean? = null
+  initialCompassEnabled: Boolean? = null,
+  styleJson: String? = null
 ) : PlatformView,
   DefaultLifecycleObserver,
   MethodChannel.MethodCallHandler {
@@ -200,6 +201,9 @@ class MapboxMapController(
     // callers can suppress SDK-default ornaments during cold start.
     initialScaleBarEnabled?.let { mapView.scalebar.enabled = it }
     initialCompassEnabled?.let { mapView.compass.enabled = it }
+    // Kick off inline style JSON load synchronously so the native SDK
+    // begins tile fetch on its first render pass — no Dart round-trip.
+    styleJson?.let { mapboxMap.loadStyleJson(it) }
     eventHandler = MapboxEventHandler(mapboxMap.styleManager, messenger, eventTypes, this.channelSuffix)
     styleController = StyleController(context, mapboxMap)
     cameraController = CameraController(mapboxMap, context)

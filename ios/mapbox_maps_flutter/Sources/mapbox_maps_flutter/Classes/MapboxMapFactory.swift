@@ -38,7 +38,11 @@ final class MapboxMapFactory: NSObject, FlutterPlatformViewFactory {
             )
         }
 
-        let styleURI = (args["styleUri"] as? String).flatMap(StyleURI.init(rawValue:))
+        let styleJson = args["styleJson"] as? String
+        // styleJson takes precedence; skip the URI load when both are set.
+        let styleURI = styleJson == nil
+            ? (args["styleUri"] as? String).flatMap(StyleURI.init(rawValue:))
+            : nil
         let mapOptions = args["mapOptions"] as? MapOptions
         let cameraOptions = args["cameraOptions"] as? CameraOptions
         let initialScaleBarEnabled = args["initialScaleBarEnabled"] as? Bool
@@ -59,7 +63,8 @@ final class MapboxMapFactory: NSObject, FlutterPlatformViewFactory {
             pluginVersion: args["mapboxPluginVersion"] as? String ?? "",
             eventTypes: args["eventTypes"] as? [Int] ?? [],
             initialScaleBarEnabled: initialScaleBarEnabled,
-            initialCompassEnabled: initialCompassEnabled
+            initialCompassEnabled: initialCompassEnabled,
+            styleJson: styleJson
         )
     }
 }

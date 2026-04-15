@@ -29,18 +29,22 @@ class MapboxMapFactory(
     val channelSuffix = params["channelSuffix"] as Long
     val textureView = params["textureView"] as? Boolean ?: false
     val styleUri = params["styleUri"] as? String
+    val styleJson = params["styleJson"] as? String
     val initialScaleBarEnabled = params["initialScaleBarEnabled"] as? Boolean
     val initialCompassEnabled = params["initialCompassEnabled"] as? Boolean
     val pluginVersion = params["mapboxPluginVersion"] as String
     val eventTypes = params["eventTypes"] as List<Long>
 
+    // When styleJson is provided it takes precedence — we load it post-init
+    // via MapboxMap.loadStyleJson. MapInitOptions.styleUri stays null so the
+    // SDK doesn't start a redundant URI load first.
     val mapInitOptions = MapInitOptions(
       context = context,
       mapOptions = mapOptions?.toMapOptions(context) ?: MapOptions.Builder()
         .applyDefaultParams(context).build(),
       cameraOptions = cameraOptions?.toCameraOptions(context),
       textureView = textureView,
-      styleUri = styleUri
+      styleUri = if (styleJson != null) null else styleUri
     )
     mapCounter.increment()
     return MapboxMapController(
@@ -52,7 +56,8 @@ class MapboxMapFactory(
       pluginVersion,
       eventTypes,
       initialScaleBarEnabled,
-      initialCompassEnabled
+      initialCompassEnabled,
+      styleJson
     )
   }
 

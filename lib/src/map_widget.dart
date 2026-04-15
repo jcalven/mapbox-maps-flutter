@@ -50,6 +50,7 @@ class MapWidget extends StatefulWidget {
     this.textureView = true,
     this.androidHostingMode = AndroidPlatformViewHostingMode.VD,
     this.styleUri,
+    this.styleJson,
     this.initialScaleBarEnabled,
     this.initialCompassEnabled,
     this.gestureRecognizers,
@@ -95,7 +96,17 @@ class MapWidget extends StatefulWidget {
   /// The styleUri will applied for the MapWidget in the onStart lifecycle event if no style is set.
   /// When null, no style is loaded and the map renders a solid background until a style is set via
   /// [MapboxMap.loadStyleURI] or [MapboxMap.loadStyleJson]. Defaults to null.
+  ///
+  /// Ignored when [styleJson] is non-null.
   final String? styleUri;
+
+  /// Raw style JSON to load during native view creation, before the first
+  /// frame renders. Use this to skip the default `onMapCreated` →
+  /// `setStyleJSON` round-trip when the caller already knows the full style
+  /// (e.g. a Standard import with inline config) at widget-build time.
+  ///
+  /// When non-null, [styleUri] is ignored.
+  final String? styleJson;
 
   /// Initial enabled state of the scale bar, applied during native view
   /// creation (before the first frame renders). When null, the SDK default
@@ -220,6 +231,7 @@ class _MapWidgetState extends State<MapWidget> {
       'cameraOptions': widget.cameraOptions,
       'textureView': widget.textureView,
       'styleUri': widget.styleUri,
+      'styleJson': widget.styleJson,
       'initialScaleBarEnabled': widget.initialScaleBarEnabled,
       'initialCompassEnabled': widget.initialCompassEnabled,
       'channelSuffix': _mapboxMapsPlatform.channelSuffix,

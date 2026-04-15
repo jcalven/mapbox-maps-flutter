@@ -29,7 +29,8 @@ final class MapboxMapController: NSObject, FlutterPlatformView {
         pluginVersion: String,
         eventTypes: [Int],
         initialScaleBarEnabled: Bool? = nil,
-        initialCompassEnabled: Bool? = nil
+        initialCompassEnabled: Bool? = nil,
+        styleJson: String? = nil
     ) {
         binaryMessenger = SuffixBinaryMessenger(messenger: registrar.messenger(), suffix: String(channelSuffix))
         _ = SettingsServiceFactory.getInstanceFor(.nonPersistent)
@@ -45,6 +46,11 @@ final class MapboxMapController: NSObject, FlutterPlatformView {
         }
         if let enabled = initialCompassEnabled {
             mapView.ornaments.options.compass.visibility = enabled ? .adaptive : .hidden
+        }
+        // Kick off inline style JSON load synchronously so the native SDK
+        // begins tile fetch on its first render pass — no Dart round-trip.
+        if let styleJson {
+            mapboxMap.loadStyle(styleJson) { _ in }
         }
 
         channel = FlutterMethodChannel(
