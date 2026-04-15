@@ -50,6 +50,8 @@ class MapWidget extends StatefulWidget {
     this.textureView = true,
     this.androidHostingMode = AndroidPlatformViewHostingMode.VD,
     this.styleUri,
+    this.initialScaleBarEnabled,
+    this.initialCompassEnabled,
     this.gestureRecognizers,
     this.onMapCreated,
     this.onStyleLoadedListener,
@@ -94,6 +96,18 @@ class MapWidget extends StatefulWidget {
   /// When null, no style is loaded and the map renders a solid background until a style is set via
   /// [MapboxMap.loadStyleURI] or [MapboxMap.loadStyleJson]. Defaults to null.
   final String? styleUri;
+
+  /// Initial enabled state of the scale bar, applied during native view
+  /// creation (before the first frame renders). When null, the SDK default
+  /// is used. Set to false to prevent the scale bar from flashing on cold
+  /// start before `ScaleBarSettings` is applied via the settings API.
+  final bool? initialScaleBarEnabled;
+
+  /// Initial enabled state of the compass, applied during native view
+  /// creation (before the first frame renders). When null, the SDK default
+  /// is used. Set to false to prevent the compass from flashing on cold
+  /// start before `CompassSettings` is applied via the settings API.
+  final bool? initialCompassEnabled;
 
   /// Invoked when a new Map is created and return a MapboxMap instance to handle the Map.
   final MapCreatedCallback? onMapCreated;
@@ -206,6 +220,8 @@ class _MapWidgetState extends State<MapWidget> {
       'cameraOptions': widget.cameraOptions,
       'textureView': widget.textureView,
       'styleUri': widget.styleUri,
+      'initialScaleBarEnabled': widget.initialScaleBarEnabled,
+      'initialCompassEnabled': widget.initialCompassEnabled,
       'channelSuffix': _mapboxMapsPlatform.channelSuffix,
       'mapboxPluginVersion': mapboxPluginVersion,
       'eventTypes': _events.eventTypes.map((e) => e.index).toList(),

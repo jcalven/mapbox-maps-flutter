@@ -29,6 +29,8 @@ class MapboxMapFactory(
     val channelSuffix = params["channelSuffix"] as Long
     val textureView = params["textureView"] as? Boolean ?: false
     val styleUri = params["styleUri"] as? String
+    val initialScaleBarEnabled = params["initialScaleBarEnabled"] as? Boolean
+    val initialCompassEnabled = params["initialCompassEnabled"] as? Boolean
     val pluginVersion = params["mapboxPluginVersion"] as String
     val eventTypes = params["eventTypes"] as List<Long>
 
@@ -48,7 +50,9 @@ class MapboxMapFactory(
       messenger,
       channelSuffix,
       pluginVersion,
-      eventTypes
+      eventTypes,
+      initialScaleBarEnabled,
+      initialCompassEnabled
     )
   }
 

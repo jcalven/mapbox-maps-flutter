@@ -27,7 +27,9 @@ final class MapboxMapController: NSObject, FlutterPlatformView {
         channelSuffix: Int,
         registrar: FlutterPluginRegistrar,
         pluginVersion: String,
-        eventTypes: [Int]
+        eventTypes: [Int],
+        initialScaleBarEnabled: Bool? = nil,
+        initialCompassEnabled: Bool? = nil
     ) {
         binaryMessenger = SuffixBinaryMessenger(messenger: registrar.messenger(), suffix: String(channelSuffix))
         _ = SettingsServiceFactory.getInstanceFor(.nonPersistent)
@@ -35,6 +37,15 @@ final class MapboxMapController: NSObject, FlutterPlatformView {
 
         mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
         mapboxMap = mapView.mapboxMap
+
+        // Apply initial ornament settings before the first frame renders so
+        // callers can suppress SDK-default ornaments during cold start.
+        if let enabled = initialScaleBarEnabled {
+            mapView.ornaments.options.scaleBar.visibility = enabled ? .adaptive : .hidden
+        }
+        if let enabled = initialCompassEnabled {
+            mapView.ornaments.options.compass.visibility = enabled ? .adaptive : .hidden
+        }
 
         channel = FlutterMethodChannel(
             name: "plugins.flutter.io.\(channelSuffix)",

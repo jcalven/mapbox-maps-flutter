@@ -41,6 +41,8 @@ final class MapboxMapFactory: NSObject, FlutterPlatformViewFactory {
         let styleURI = (args["styleUri"] as? String).flatMap(StyleURI.init(rawValue:))
         let mapOptions = args["mapOptions"] as? MapOptions
         let cameraOptions = args["cameraOptions"] as? CameraOptions
+        let initialScaleBarEnabled = args["initialScaleBarEnabled"] as? Bool
+        let initialCompassEnabled = args["initialCompassEnabled"] as? Bool
 
         let mapInitOptions = MapInitOptions(
             mapOptions: mapOptions?.toMapOptions() ?? MapboxMaps.MapOptions(),
@@ -55,7 +57,9 @@ final class MapboxMapFactory: NSObject, FlutterPlatformViewFactory {
             channelSuffix: args["channelSuffix"] as? Int ?? 0,
             registrar: registrar,
             pluginVersion: args["mapboxPluginVersion"] as? String ?? "",
-            eventTypes: args["eventTypes"] as? [Int] ?? []
+            eventTypes: args["eventTypes"] as? [Int] ?? [],
+            initialScaleBarEnabled: initialScaleBarEnabled,
+            initialCompassEnabled: initialCompassEnabled
         )
     }
 }

@@ -35,6 +35,8 @@ import com.mapbox.maps.mapbox_maps.pigeons._MapRecorderMessenger
 import com.mapbox.maps.mapbox_maps.pigeons._PerformanceStatisticsApi
 import com.mapbox.maps.mapbox_maps.pigeons._ViewportMessenger
 import com.mapbox.maps.plugin.animation.camera
+import com.mapbox.maps.plugin.compass.compass
+import com.mapbox.maps.plugin.scalebar.scalebar
 import com.mapbox.maps.plugin.viewport.viewport
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.BinaryMessenger
@@ -96,7 +98,9 @@ class MapboxMapController(
   messenger: BinaryMessenger,
   channelSuffix: Long,
   pluginVersion: String,
-  eventTypes: List<Long>
+  eventTypes: List<Long>,
+  initialScaleBarEnabled: Boolean? = null,
+  initialCompassEnabled: Boolean? = null
 ) : PlatformView,
   DefaultLifecycleObserver,
   MethodChannel.MethodCallHandler {
@@ -192,6 +196,10 @@ class MapboxMapController(
     val mapboxMap = mapView.mapboxMap
     this.mapView = mapView
     this.mapboxMap = mapboxMap
+    // Apply initial ornament settings before the first frame renders so
+    // callers can suppress SDK-default ornaments during cold start.
+    initialScaleBarEnabled?.let { mapView.scalebar.enabled = it }
+    initialCompassEnabled?.let { mapView.compass.enabled = it }
     eventHandler = MapboxEventHandler(mapboxMap.styleManager, messenger, eventTypes, this.channelSuffix)
     styleController = StyleController(context, mapboxMap)
     cameraController = CameraController(mapboxMap, context)
